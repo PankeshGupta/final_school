@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% block body %}
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<div class="container">
+
+<p class="pull-right"> <a id = "logout" href="#">Logout</a></p>
+<h3>hello {{user}}</h3>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form id="student_form">
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" class="form-control" name="student_name" placeholder="StudentName" required>
+                </div>
+                <div class="form-group">
+                    <label>Class</label>
+                    <input type="text" class="form-control" name="student_class" placeholder="Class" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Save to database </button>
+            </form>
+            <br>
+        </div>
+    </div>
+    <h4>Students table</h4>
+    <table class="table table-stripped" id="students_table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Class</th>
+            <th> Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+            {% for student in student_list: %}
+            <tr>
+                <td> {{student['name']}}</td>
+                <td> {{student['class']}}</td>
+                <td>
+                    <div class="row">
+                        <button id="student_delete">Delete</button>
+                        <button id="student_edit">Edit</button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+
+</div>
+</div>
+<script>
+    $(document).ready(function() {
+
+
+        $("#student_delete").click(function(){
+         var choice = confirm('Are u sure');
+         if (choice){
+
+         }
+         });
+
+        $("#logout").click(function(){
+            $.get("/api/logout", function(data, status){
+                alert("You have sucessfully logged out"),
+                window.location = "/";
+                                                        });
+                                     });
+
+    // process the form
+    $('#student_form').submit(function(event) {
+        console.log("yha tak aa gya shukar h");
+
+        var formData = {
+            'name'  : $('input[name=student_name]').val(),
+            'class' : $('input[name=student_class]').val()
+                         };
+
+
+        var request=$.ajax({
+            type        : 'POST',
+            url         : '/api/student',
+            data        : formData,
+            dataType    : 'json',
+                             })
+         request.done(function(data) {
+                console.log('sucess'),
+                alert('added sucessfully'),
+                $("#students_table tbody").prepend('<tr><td>Hello</td><td>first</td></tr>')
+                                      });
+         request.success(function(response){
+         console.log('On sucess')
+         console.log(response);
+                                            });
+
+        event.preventDefault();
+                                                     });
+    });
+</script>
+
+
+{% endblock %}

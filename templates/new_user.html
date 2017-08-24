@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block body %}
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<div class="container">
+    <h3>Please register yourself before procceding </h3>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form id ="new_user_form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" name="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Register</button>
+            </form>
+            <br>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+
+    // process the form
+    $('#new_user_form').submit(function(event) {
+
+        var formData = {
+                      "username"  : $('input[name=username]').val(),
+                      "password" : $('input[name=password]').val()
+                        };
+        var request=$.ajax({
+            type        : 'POST',
+            url         : '/api/register',
+            data        : formData,
+            dataType    : 'json',
+                 })
+        request.done(function(data) {
+                console.log('sucess');
+                alert('Welcome to the application');
+                window.location = "/user/"+formData['username'];
+                    });
+        request.fail(function() {
+                alert( "Registration failed" );
+
+                });
+
+        event.preventDefault();
+    });
+    });
+</script>
+{% endblock %}

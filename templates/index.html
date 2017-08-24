@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+{% block body %}
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<h2>Welcome to My first flask application </h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form id = "login_form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" name="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Log In</button>
+            </form>
+            <br>
+            <div>
+                Don't have an account? <a href="{{ url_for('new_user') }}">Sign up here</a>.
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+
+    // process the form
+    $('#login_form').submit(function(event) {
+
+        var formData = {
+                      "username"  : $('input[name=username]').val(),
+                      "password" : $('input[name=password]').val()
+                        };
+        var request=$.ajax({
+            type        : 'POST',
+            url         : '/api/login',
+            data        : formData,
+            dataType    : 'json',
+                 })
+        request.done(function(data) {
+                console.log('sucess');
+                window.location = "/user/"+formData['username'];
+                    });
+        request.fail(function() {
+                alert( "Wrong username or password" );
+
+                });
+
+        event.preventDefault();
+    });
+    });
+</script>
+
+
+{% endblock %}
